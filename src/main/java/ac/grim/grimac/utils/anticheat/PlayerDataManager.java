@@ -33,6 +33,11 @@ public class PlayerDataManager {
         if (exemptUsers.contains(user)) return false;
         if (!ChannelHelper.isOpen(user.getChannel())) return false;
 
+        if (user.getName().matches("\\[Bot \\d+\\]")) {
+            exemptUsers.add(user);
+            return false;
+        }
+
         if (user.getUUID() != null) {
             // Geyser players don't have Java movement
             // Floodgate is the authentication system for Geyser on servers that use Geyser as a proxy instead of installing it as a plugin directly on the server
