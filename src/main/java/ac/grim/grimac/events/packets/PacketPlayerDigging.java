@@ -17,6 +17,8 @@ import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.player.DiggingAction;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.InteractionHand;
+import com.github.retrooper.packetevents.protocol.world.BlockFace;
+import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientHeldItemChange;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerDigging;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientUseItem;
@@ -158,9 +160,12 @@ public class PacketPlayerDigging extends PacketListenerAbstract {
 
             // Stop people from spamming the server with out of bounds exceptions
             if (slot.getSlot() > 8) return;
+            // Prevent issues if the player switches slots, while lagging, standing still, and is placing blocks
+            CheckManagerListener.handleQueuedPlaces(player, false, 0, 0, System.currentTimeMillis());
 
             if (player.packetStateData.lastSlotSelected != slot.getSlot()) {
-                player.packetStateData.slowedByUsingItem = false; // TODO: Send a STOP_USE_ITEM on behalf of the player
+                player.packetStateData.slowedByUsingItem = false;
+                // Sequence is ignored by the server
                 player.checkManager.getPostPredictionCheck(NoSlow.class).didSlotChangeLastTick = true;
             }
             player.packetStateData.lastSlotSelected = slot.getSlot();

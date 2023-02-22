@@ -7,6 +7,13 @@
 alerts:
   # ¿Además de mandar las alertas a los jugadores, deberíamos mandarlas también a la consola?
   print-to-console: true
+  # This controls whether/how alerts are shared between servers connected to your proxy.
+  # You must have 'bungee-plugin-message-channel' enabled in your Velocity's configuration if Velocity is in use.
+  proxy:
+    # Should alerts be sent to other servers connected to your proxy?
+    send: false
+    # Should the alerts received from other servers be announced to this server?
+    receive: false
 
 verbose:
   print-to-console: false
@@ -55,6 +62,21 @@ Phase:
   setbackvl: 1 # Entrar a un bloque mediante bugs puede permitir subir paredes, además esta comprobación es relativamente estable.
   decay: 0.005
 
+AirLiquidPlace:
+  cancelvl: 0
+
+FabricatedPlace:
+  cancelvl: 5
+
+FarPlace:
+  cancelvl: 5
+
+PositionPlace:
+  cancelvl: 5
+
+RotationPlace:
+  cancelvl: 5
+
 # Comprobación de NoSlow basado en predicciones
 # Grim compensa por código de red con errores aquí... difícil de sacar un falso positivo incluso haciendo spam del
 # clic derecho y la mano secundaria.
@@ -87,6 +109,10 @@ TimerA:
   # Podría llegar a permitir pasos por alto de fast use/fast heal/fast bow en 1.8 si esta muy alto, 120 ms
   # parece ser un balance bastante decente.
   drift: 120
+
+NegativeTimer:
+  # Number of milliseconds lost while moving before we should start flagging
+  drift: 1200
 
 # La misma comprobación que TimerA, pero para vehiculos
 TimerVehicle:
@@ -124,6 +150,6 @@ experimental-checks: false
 # Grim a veces cancela paquetes ilegal como los de Timer. Después de X paquetes en un solo segundo cancelados,
 # cuando deberíamos simplemente expulsar al jugador? Esto es obligatorio ya que algunos limitadores de paquetes
 # no cuentan los paquetes cancelados por Grim.
-packet-spam-threshold: 150
+packet-spam-threshold: 100
 
 config-version: 8

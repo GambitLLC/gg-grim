@@ -1,6 +1,7 @@
 package ac.grim.grimac.manager;
 
 import ac.grim.grimac.GrimAPI;
+import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.impl.badpackets.BadPacketsN;
 import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.events.packets.patch.ResyncWorldUtil;
@@ -37,7 +38,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SetbackTeleportUtil extends PostPredictionCheck {
+public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
     // Sync to netty
     public final ConcurrentLinkedQueue<TeleportData> pendingTeleports = new ConcurrentLinkedQueue<>();
     // Sync to netty, a player MUST accept a teleport to spawn into the world
@@ -183,7 +184,7 @@ public class SetbackTeleportUtil extends PostPredictionCheck {
 
         player.boundingBox = oldBB; // reset back to the new bounding box
 
-        if (!hasAcceptedSpawnTeleport) clientVel = null; // if the player hasn't spawned... don't force kb
+        if (!hasAcceptedSpawnTeleport || player.isFlying) clientVel = null; // if the player is flying or hasn't spawned... don't force kb
 
         // Something weird has occurred in the player's movement, block offsets until we resync
         if (isResync) {
